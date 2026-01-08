@@ -1,0 +1,1 @@
+This project is a turn-based strategic card game developed in Godot 4. It features a single-player experience where a player competes against an AI across various attack and defense phases using a standard 54-card deck (including Jokers).
