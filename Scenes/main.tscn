@@ -1,0 +1,151 @@
+[gd_scene load_steps=11 format=3 uid="uid://b4w0r1un0kka4"]
+
+[ext_resource type="Script" path="res://card_manager.gd" id="1_6ds2p"]
+[ext_resource type="Texture2D" uid="uid://cmkxefi74qhvm" path="res://Sprites/BG.jpg" id="1_xe3a7"]
+[ext_resource type="Script" path="res://Scenes/slot_manager.gd" id="3_ixn44"]
+[ext_resource type="PackedScene" uid="uid://cjijpivjxhtia" path="res://Scenes/weapon_slot.tscn" id="3_l01tp"]
+[ext_resource type="PackedScene" uid="uid://c0k5x6fsx4b3p" path="res://Scenes/shield_slot.tscn" id="4_1t67h"]
+[ext_resource type="Script" path="res://Scenes/deck.gd" id="5_b7gwj"]
+[ext_resource type="Texture2D" uid="uid://bpijvcbgcpkv" path="res://Sprites/card_back.png" id="6_pqqys"]
+[ext_resource type="Script" path="res://Scenes/ai.gd" id="7_s2pil"]
+[ext_resource type="Script" path="res://Scenes/win_screen.gd" id="9_f51h8"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dpaiw"]
+bg_color = Color(0.129558, 0.129559, 0.129558, 1)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+
+[node name="Main" type="Node2D"]
+
+[node name="BackgroundImage" type="Sprite2D" parent="."]
+z_index = -5
+position = Vector2(710, 397)
+scale = Vector2(2.3, 2.3)
+texture = ExtResource("1_xe3a7")
+
+[node name="Deck" type="Node2D" parent="."]
+scale = Vector2(0.2, 0.2)
+script = ExtResource("5_b7gwj")
+
+[node name="DeckImage" type="Sprite2D" parent="Deck"]
+position = Vector2(380, 3485)
+texture = ExtResource("6_pqqys")
+
+[node name="DeckCardCounter" type="Label" parent="."]
+offset_left = 52.0
+offset_top = 600.0
+offset_right = 107.0
+offset_bottom = 623.0
+text = "54 left"
+
+[node name="SlotManager" type="Node2D" parent="."]
+script = ExtResource("3_ixn44")
+
+[node name="WeaponSlot" parent="SlotManager" instance=ExtResource("3_l01tp")]
+z_index = -2
+position = Vector2(587, 525)
+scale = Vector2(0.2, 0.2)
+
+[node name="ShieldSlot" parent="SlotManager" instance=ExtResource("4_1t67h")]
+z_index = -2
+position = Vector2(804, 525)
+scale = Vector2(0.2, 0.2)
+
+[node name="ComputerWeaponSlot" parent="." instance=ExtResource("3_l01tp")]
+position = Vector2(804, 277)
+rotation = 3.14159
+scale = Vector2(0.2, 0.2)
+script = null
+
+[node name="ComputerShieldSlot" parent="." instance=ExtResource("4_1t67h")]
+position = Vector2(587, 277)
+rotation = -3.14159
+scale = Vector2(0.2, 0.2)
+script = null
+
+[node name="PlayBotButton" type="Button" parent="."]
+offset_left = 1301.0
+offset_top = 684.0
+offset_right = 1372.0
+offset_bottom = 715.0
+disabled = true
+text = "Play bot"
+
+[node name="SkipTurnButton" type="Button" parent="."]
+offset_left = 1297.0
+offset_top = 728.0
+offset_right = 1376.0
+offset_bottom = 759.0
+disabled = true
+text = "Skip turn"
+
+[node name="ComputerScore" type="Label" parent="."]
+offset_left = 40.0
+offset_top = 104.0
+offset_right = 101.0
+offset_bottom = 127.0
+text = "Score: 0"
+
+[node name="PlayerScore" type="Label" parent="."]
+offset_left = 1302.0
+offset_top = 626.0
+offset_right = 1367.0
+offset_bottom = 653.0
+text = "Score: 0"
+
+[node name="Turn" type="Label" parent="."]
+offset_left = 618.0
+offset_top = 393.0
+offset_right = 786.0
+offset_bottom = 416.0
+text = "Turn: Player1 defense"
+
+[node name="ComputerSkipLabel" type="Label" parent="."]
+visible = false
+offset_left = 1056.0
+offset_top = 388.0
+offset_right = 1264.0
+offset_bottom = 418.0
+theme_override_font_sizes/font_size = 22
+text = "Computer skips turn"
+
+[node name="AI" type="Node2D" parent="."]
+script = ExtResource("7_s2pil")
+
+[node name="CardManager" type="Node2D" parent="."]
+script = ExtResource("1_6ds2p")
+
+[node name="WinScreen" type="Node2D" parent="."]
+visible = false
+script = ExtResource("9_f51h8")
+
+[node name="ScreenBG" type="Polygon2D" parent="WinScreen"]
+position = Vector2(237, 204)
+scale = Vector2(1.82205, 1.10694)
+color = Color(0.0392157, 0.0392157, 0.0392157, 0.92549)
+polygon = PackedVector2Array(113, 276, 401, 276, 401, 51, 113, 51)
+
+[node name="GameResult" type="Label" parent="WinScreen"]
+offset_left = 627.0
+offset_top = 315.0
+offset_right = 780.0
+offset_bottom = 370.0
+theme_override_font_sizes/font_size = 40
+text = "You win
+"
+
+[node name="TryAgainButton" type="Button" parent="WinScreen"]
+offset_left = 656.0
+offset_top = 402.0
+offset_right = 753.0
+offset_bottom = 438.0
+theme_override_font_sizes/font_size = 20
+theme_override_styles/normal = SubResource("StyleBoxFlat_dpaiw")
+disabled = true
+text = "Try again"
+
+[connection signal="pressed" from="PlayBotButton" to="CardManager" method="_on_play_bot_button_pressed"]
+[connection signal="pressed" from="SkipTurnButton" to="CardManager" method="_on_skip_turn_button_pressed"]
+[connection signal="pressed" from="WinScreen/TryAgainButton" to="WinScreen" method="_on_try_again_button_pressed"]
